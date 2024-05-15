@@ -87,7 +87,7 @@ def upload():
             print('File "{0}" uploaded to Box with file ID {1}'.format(new_file.name, new_file.id))
 
             # アップロードしたファイルの共有リンクを作成（パスワードを含む）
-            shared_link = new_file.get_shared_link(access='open', password=new_folder_name)
+            shared_link = new_file.get_shared_link(access='open')
             print(f'Shared link for the file with password protection: {shared_link}')
 
             # 一時ファイルを削除
