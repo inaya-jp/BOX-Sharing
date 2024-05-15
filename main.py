@@ -5,7 +5,7 @@ from flask import Flask, request, redirect, url_for, render_template
 import os
 import random
 
-# env.iniのパス
+# 環境設定ファイルのパスを設定
 CONFIG_FILE = 'env.ini'
 
 # ConfigParserオブジェクトを作成
@@ -18,17 +18,19 @@ if not os.path.exists(CONFIG_FILE):
 # env.iniファイルを読み込む
 config.read(CONFIG_FILE)
 
-CLIENT_ID = config['box']['client_id']
-CLIENT_SECRET = config['box']['client_secret']
-REDIRECT_URI = 'http://localhost:5000/callback'
-FOLDER_ID = config['box']['folder_id']
+CLIENT_ID = config['box']['client_id']          #BOX クライアントID
+CLIENT_SECRET = config['box']['client_secret']  #BOX クライアントシークレット
+REDIRECT_URI = 'http://localhost:5000/callback' #BOX API コールバックURL
+FOLDER_ID = config['box']['folder_id']          #BOX アップロード先のフォルダID
 
+#アクセストークン書き込み関数
 def store_tokens(access_token, refresh_token):
     config['box']['access_token'] = access_token
     config['box']['refresh_token'] = refresh_token
     with open(CONFIG_FILE, 'w') as configfile:
         config.write(configfile)
 
+#アクセストークン読み込み関数
 def read_tokens():
     access_token = config['box'].get('access_token', '')
     refresh_token = config['box'].get('refresh_token', '')
@@ -36,6 +38,7 @@ def read_tokens():
 
 access_token, refresh_token = read_tokens()
 
+#ランダムパスワード生成関数
 def generate_password(length=8):
     characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     return ''.join(random.choice(characters) for i in range(length))
@@ -50,12 +53,14 @@ oauth = OAuth2(
     refresh_token=refresh_token
 )
 
+#Flask / API アクセスページ
 if not access_token or not refresh_token:
     @app.route('/')
     def index():
         auth_url, csrf_token = oauth.get_authorization_url(REDIRECT_URI)
         return redirect(auth_url)
 
+    #Flask /callback API コールバックページ
     @app.route('/callback')
     def callback():
         auth_code = request.args.get('code')
@@ -67,11 +72,13 @@ else:
 
 client = Client(oauth)
 
+#Flask /upload ファイルアップロードページ
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
     if request.method == 'POST':
         file = request.files['file']
         if file:
+            #ファイルを一時フォルダに移動
             file_path = os.path.join('tmp\\', file.filename)
             file.save(file_path)
 
@@ -92,7 +99,8 @@ def upload():
 
             # 一時ファイルを削除
             os.remove(file_path)
-
+            
+            #クライアント画面に表示する情報をリターン
             return render_template('result.html', shared_link=shared_link, new_folder_name=new_folder_name)
     return render_template('upload.html')
 
