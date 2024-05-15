@@ -4,6 +4,7 @@ pip install --no-deps boxsdk-3.9.2-py2.py3-none-any.whl
 pip install --no-deps certifi-2024.2.2-py3-none-any.whl
 pip install --no-deps charset_normalizer-3.3.2-cp312-cp312-win_amd64.whl
 pip install --no-deps click-8.1.7-py3-none-any.whl
+pip install --no-deps colorama-0.4.6-py2.py3-none-any.whl
 pip install --no-deps flask-3.0.3-py3-none-any.whl
 pip install --no-deps idna-3.7-py3-none-any.whl
 pip install --no-deps itsdangerous-2.2.0-py3-none-any.whl
