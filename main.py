@@ -38,6 +38,7 @@ def read_tokens():
 
 access_token, refresh_token = read_tokens()
 
+#ランダムパスワード生成関数
 def generate_password(length=8):
     characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     return ''.join(secrets.choice(characters) for i in range(length))
