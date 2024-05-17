@@ -3,7 +3,7 @@ from boxsdk import OAuth2, Client
 import webbrowser
 from flask import Flask, request, redirect, url_for, render_template
 import os
-import random
+import secrets
 
 # 環境設定ファイルのパスを設定
 CONFIG_FILE = 'env.ini'
@@ -38,10 +38,10 @@ def read_tokens():
 
 access_token, refresh_token = read_tokens()
 
-#ランダムパスワード生成関数
 def generate_password(length=8):
     characters = "23456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-    return ''.join(random.choice(characters) for i in range(length))
+    return ''.join(secrets.choice(characters) for i in range(length))
+
 
 app = Flask(__name__)
 
